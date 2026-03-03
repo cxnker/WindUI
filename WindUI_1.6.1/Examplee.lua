@@ -1,12 +1,22 @@
-local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/cxnker/WindUI/main/WindUI_1.6.1/dist/main.lua"))()
+-- Cargar WindUI con manejo de errores
+local WindUI
+local success, result = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/cxnker/WindUI/main/WindUI_1.6.1/dist/main.lua"))()
+end)
 
--- Test
+if success and result then
+    WindUI = result
+    print("✅ WindUI cargado correctamente")
+else
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Error",
+        Text = "No se pudo cargar WindUI",
+        Duration = 5
+    })
+    return
+end
 
--- Set theme:
---WindUI:SetTheme("Light")
-
---- EXAMPLE !!!
-
+-- Función gradient (sin cambios)
 function gradient(text, startColor, endColor)
     local result = ""
     local length = #text
@@ -26,32 +36,36 @@ end
 
 local Confirmed = false
 
+-- Popup sin iconos
 WindUI:Popup({
     Title = "Welcome! Popup Example",
-    -- Icon removido
     Content = "This is an Example UI for the " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
     Buttons = {
         {
             Title = "Cancel",
-            Callback = function() end,
+            Callback = function() 
+                print("Cancel clicked")
+            end,
             Variant = "Secondary",
         },
         {
             Title = "Continue",
-            -- Icon removido
-            Callback = function() Confirmed = true end,
+            Callback = function() 
+                print("Continue clicked")
+                Confirmed = true 
+            end,
             Variant = "Primary",
         }
     }
 })
 
--- Esperar a que Confirmed sea true
+-- Esperar confirmación
 repeat task.wait() until Confirmed
+print("✅ Confirmado, creando ventana...")
 
--- Crear ventana principal
+-- Ventana principal SIN KEY SYSTEM
 local Window = WindUI:CreateWindow({
     Title = "WindUI Library",
-    -- Icon removido
     Author = "Example UI",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(580, 460),
@@ -59,22 +73,17 @@ local Window = WindUI:CreateWindow({
     Theme = "Dark",
     User = {
         Enabled = true,
-        Callback = function() print("clicked") end,
+        Callback = function() print("User clicked") end,
         Anonymous = true
     },
     SideBarWidth = 200,
     HasOutline = true,
-    KeySystem = {
-        Key = { "1234", "5678" },
-        Note = "Example Key System. \n\nThe Key is '1234' or '5678",
-        SaveKey = true,
-    },
+    -- KEY SYSTEM ELIMINADO COMPLETAMENTE
 })
 
--- Editar botón de apertura (también sin icono)
+-- Botón de apertura sin icono
 Window:EditOpenButton({
     Title = "Open Example UI",
-    -- Icon removido
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
     Color = ColorSequence.new(
@@ -84,46 +93,56 @@ Window:EditOpenButton({
     Draggable = true,
 })
 
--- Crear pestañas (quitando los iconos)
+-- Crear pestañas sin iconos
 local Tabs = {
-    ParagraphTab = Window:Tab({ Title = "Paragraph" }), -- Icon removido
-    ButtonTab = Window:Tab({ Title = "Button", Desc = "Contains interactive buttons for various actions." }),
-    CodeTab = Window:Tab({ Title = "Code", Desc = "Displays and manages code snippets." }),
-    ColorPickerTab = Window:Tab({ Title = "ColorPicker", Desc = "Choose and customize colors easily." }),
-    DialogTab = Window:Tab({ Title = "Dialog", Desc = "Dialog lol" }),
-    NotificationTab = Window:Tab({ Title = "Notification", Desc = "Configure and view notifications." }),
-    ToggleTab = Window:Tab({ Title = "Toggle", Desc = "Switch settings on and off." }),
-    SliderTab = Window:Tab({ Title = "Slider", Desc = "Adjust values smoothly with sliders." }),
-    InputTab = Window:Tab({ Title = "Input", Desc = "Accept text and numerical input." }),
-    KeybindTab = Window:Tab({ Title = "Keybind" }),
-    DropdownTab = Window:Tab({ Title = "Dropdown", Desc = "Select from multiple options." }),
-    divider1 = Window:Divider(),
-    WindowTab = Window:Tab({ 
-        Title = "Window and File Configuration", 
-        Desc = "Manage window settings and file configurations.", 
-        ShowTabTitle = true
-    }),
-    CreateThemeTab = Window:Tab({ Title = "Create Theme", Desc = "Design and apply custom themes." }),
-    be = Window:Divider(),
-    LongTab = Window:Tab({ Title = "Long and empty tab. Looong and empty.. tab.", Desc = "Long Description" }),
-    LockedTab = Window:Tab({ Title = "Locked Tab", Desc = "This tab is locked", Locked = true }),
-    TabWithoutIcon = Window:Tab({ Title = "Tab Without icon", ShowTabTitle = true }),
-    Tests = Window:Tab({ Title = "Tests", ShowTabTitle = true }),
+    ButtonTab = Window:Tab({ Title = "Button", Desc = "Interactive buttons" }),
+    ToggleTab = Window:Tab({ Title = "Toggle", Desc = "Switch settings" }),
+    SliderTab = Window:Tab({ Title = "Slider", Desc = "Adjust values" }),
+    InputTab = Window:Tab({ Title = "Input", Desc = "Text input" }),
 }
 
 Window:SelectTab(1)
 
--- Resto del código pero quitando TODOS los Icon e Image que causan problemas
--- Por ejemplo, en los Paragraphs, quita los parámetros Image:
-
-Tabs.ParagraphTab:Paragraph({
-    Title = "Paragraph with Thumbnail",
-    Desc = "Test Paragraph",
-    Thumbnail = "https://tr.rbxcdn.com/180DAY-59af3523ad8898216dbe1043788837bf/768/432/Image/Webp/noFilter",
-    ThumbnailSize = 120
+-- Agregar algunos elementos básicos para probar
+Tabs.ButtonTab:Button({
+    Title = "Test Button",
+    Desc = "This is a test button",
+    Callback = function() 
+        print("Button clicked!")
+        WindUI:Notify({
+            Title = "Test",
+            Content = "Button worked!",
+            Duration = 3,
+        })
+    end
 })
 
--- Continuar con el resto del script pero eliminando TODAS las referencias a:
--- - Icon
--- - Image (a menos que sea una URL de imagen real)
--- - Cualquier otro parámetro que pueda estar causando problemas
+Tabs.ToggleTab:Toggle({
+    Title = "Enable Test",
+    Value = false,
+    Callback = function(state) 
+        print("Toggle:", state)
+    end
+})
+
+Tabs.SliderTab:Slider({
+    Title = "Test Slider",
+    Value = {
+        Min = 0,
+        Max = 100,
+        Default = 50,
+    },
+    Callback = function(value) 
+        print("Slider:", value)
+    end
+})
+
+Tabs.InputTab:Input({
+    Title = "Test Input",
+    Placeholder = "Type something...",
+    Callback = function(input) 
+        print("Input:", input)
+    end
+})
+
+print("✅ Script ejecutado correctamente")
