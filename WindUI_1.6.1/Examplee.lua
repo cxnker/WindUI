@@ -76,6 +76,10 @@ local Window = WindUI:CreateWindow({
         Callback = function() print("User clicked") end,
         Anonymous = true
     },
+    Expand = {
+        Enabled = true,
+        Width = 200
+    },
     SideBarWidth = 200,
     HasOutline = true,
     -- KEY SYSTEM ELIMINADO COMPLETAMENTE
