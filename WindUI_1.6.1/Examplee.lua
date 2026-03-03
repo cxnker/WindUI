@@ -1,13 +1,6 @@
--- Cargar WindUI con manejo de errores
-local WindUI
-local success, result = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/cxnker/WindUI/main/WindUI_1.6.1/dist/main.lua"))()
-end)
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/cxnker/WindUI/main/WindUI_1.6.1/dist/main.lua"))()
 
-if success and result then
-    WindUI = result
-    print("✅ WindUI cargado correctamente")
-else
+if not WindUI then
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Error",
         Text = "No se pudo cargar WindUI",
@@ -16,7 +9,9 @@ else
     return
 end
 
--- Función gradient (sin cambios)
+print("✅ WindUI cargado correctamente")
+
+-- Función gradient (opcional, para el popup)
 function gradient(text, startColor, endColor)
     local result = ""
     local length = #text
@@ -36,16 +31,14 @@ end
 
 local Confirmed = false
 
--- Popup sin iconos
+-- Popup sin íconos problemáticos
 WindUI:Popup({
-    Title = "Welcome! Popup Example",
+    Title = "Welcome!",
     Content = "This is an Example UI for the " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
     Buttons = {
         {
             Title = "Cancel",
-            Callback = function() 
-                print("Cancel clicked")
-            end,
+            Callback = function() print("Cancel") end,
             Variant = "Secondary",
         },
         {
@@ -61,9 +54,8 @@ WindUI:Popup({
 
 -- Esperar confirmación
 repeat task.wait() until Confirmed
-print("✅ Confirmado, creando ventana...")
 
--- Ventana principal SIN KEY SYSTEM
+-- CREAR VENTANA - SIN PARÁMETROS INCORRECTOS
 local Window = WindUI:CreateWindow({
     Title = "WindUI Library",
     Author = "Example UI",
@@ -76,12 +68,10 @@ local Window = WindUI:CreateWindow({
         Callback = function() print("User clicked") end,
         Anonymous = true
     },
-    -- NO USES "Expand" NI "SideBarWidth" - ¡NO EXISTEN!
-    HasOutline = true,  -- Este SÍ existe (línea 82 del código fuente)
-    -- KeySystem = { ... }  -- Opcional, pero existe
+    HasOutline = true,  -- Este parámetro SÍ existe
 })
 
--- Botón de apertura sin icono
+-- Botón de apertura (opcional)
 Window:EditOpenButton({
     Title = "Open Example UI",
     CornerRadius = UDim.new(0,16),
@@ -93,56 +83,26 @@ Window:EditOpenButton({
     Draggable = true,
 })
 
--- Crear pestañas sin iconos
+print("✅ Ventana creada correctamente")
+
+-- Crear pestañas
 local Tabs = {
-    ButtonTab = Window:Tab({ Title = "Button", Desc = "Interactive buttons" }),
-    ToggleTab = Window:Tab({ Title = "Toggle", Desc = "Switch settings" }),
-    SliderTab = Window:Tab({ Title = "Slider", Desc = "Adjust values" }),
-    InputTab = Window:Tab({ Title = "Input", Desc = "Text input" }),
+    Main = Window:Tab({ Title = "Main" }),
+    Settings = Window:Tab({ Title = "Settings" }),
 }
 
 Window:SelectTab(1)
 
--- Agregar algunos elementos básicos para probar
-Tabs.ButtonTab:Button({
+-- Botón de prueba
+Tabs.Main:Button({
     Title = "Test Button",
-    Desc = "This is a test button",
-    Callback = function() 
+    Desc = "Click me!",
+    Callback = function()
         print("Button clicked!")
         WindUI:Notify({
-            Title = "Test",
+            Title = "Success",
             Content = "Button worked!",
             Duration = 3,
         })
     end
 })
-
-Tabs.ToggleTab:Toggle({
-    Title = "Enable Test",
-    Value = false,
-    Callback = function(state) 
-        print("Toggle:", state)
-    end
-})
-
-Tabs.SliderTab:Slider({
-    Title = "Test Slider",
-    Value = {
-        Min = 0,
-        Max = 100,
-        Default = 50,
-    },
-    Callback = function(value) 
-        print("Slider:", value)
-    end
-})
-
-Tabs.InputTab:Input({
-    Title = "Test Input",
-    Placeholder = "Type something...",
-    Callback = function(input) 
-        print("Input:", input)
-    end
-})
-
-print("✅ Script ejecutado correctamente")
