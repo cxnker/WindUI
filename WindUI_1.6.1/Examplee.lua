@@ -76,13 +76,9 @@ local Window = WindUI:CreateWindow({
         Callback = function() print("User clicked") end,
         Anonymous = true
     },
-    Expand = {
-        Enabled = true,
-        Width = 200
-    },
-    SideBarWidth = 200,
-    HasOutline = true,
-    -- KEY SYSTEM ELIMINADO COMPLETAMENTE
+    -- NO USES "Expand" NI "SideBarWidth" - ¡NO EXISTEN!
+    HasOutline = true,  -- Este SÍ existe (línea 82 del código fuente)
+    -- KeySystem = { ... }  -- Opcional, pero existe
 })
 
 -- Botón de apertura sin icono
