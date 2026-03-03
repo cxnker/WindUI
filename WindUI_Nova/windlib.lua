@@ -6,6 +6,12 @@
     
     WindUI Library - Versión Completa Unificada 1.6.1
     by .ftgs#0 (Discord)
+    
+    INSTRUCCIONES: 
+    1. Copia TODO este archivo
+    2. Pégalo en tu ejecutor
+    3. Ejecútalo UNA SOLA VEZ
+    4. La librería estará lista para usar
 ]]
 
 local a = {}
@@ -1181,7 +1187,6 @@ function a.f()
         popup.UIElements.Main.AutomaticSize = 'Y'
         popup.UIElements.Main.Size = UDim2.new(0, popupWidth, 0, 0)
         
-        -- Ícono
         local iconElement
         if config.Icon then
             local themeTag = { ImageColor3 = 'Text' }
@@ -2940,6 +2945,7 @@ function a.u()
             Position = UDim2.new(0.5,0,0.5,0),
             UICorner = 16,
             UIPadding = 14,
+            SideBarWidth = 200,
             UIElements = {},
             CanDropdown = true,
             Closed = false,
@@ -3039,7 +3045,7 @@ function a.u()
         })
         
         window.UIElements.SideBarContainer = New('Frame', {
-            Size = UDim2.new(0, window.SideBarWidth or 200, 1, window.User.Enabled and -94-(window.UIPadding*2) or -52),
+            Size = UDim2.new(0, window.SideBarWidth, 1, window.User.Enabled and -94-(window.UIPadding*2) or -52),
             Position = UDim2.new(0,0,0,52),
             BackgroundTransparency = 1,
             Visible = true
@@ -3081,14 +3087,14 @@ function a.u()
         local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
         
         -- Open button for mobile/desktop
-        local openButton, openButtonFrame
+        local openButton, openButtonFrame, openButtonIcon, openButtonTitle, openButtonDrag, openButtonDivider
         if not isMobile then
-            local openButtonIcon = New('ImageLabel', { Image='', Size=UDim2.new(0,22,0,22), Position=UDim2.new(0.5,0,0.5,0), LayoutOrder=-1, AnchorPoint=Vector2.new(0.5,0.5), BackgroundTransparency=1, Name='Icon' })
-            local openButtonTitle = New('TextLabel', { Text=window.Title, TextSize=17, FontFace=Font.new(Core.Font,Enum.FontWeight.Medium), BackgroundTransparency=1, AutomaticSize='XY' })
-            local openButtonDrag = New('Frame', { Size=UDim2.new(0,36,0,36), BackgroundTransparency=1, Name='Drag' }, {
+            openButtonIcon = New('ImageLabel', { Image='', Size=UDim2.new(0,22,0,22), Position=UDim2.new(0.5,0,0.5,0), LayoutOrder=-1, AnchorPoint=Vector2.new(0.5,0.5), BackgroundTransparency=1, Name='Icon' })
+            openButtonTitle = New('TextLabel', { Text=window.Title, TextSize=17, FontFace=Font.new(Core.Font,Enum.FontWeight.Medium), BackgroundTransparency=1, AutomaticSize='XY' })
+            openButtonDrag = New('Frame', { Size=UDim2.new(0,36,0,36), BackgroundTransparency=1, Name='Drag' }, {
                 New('ImageLabel', { Image=Core.Icon('move')[1], ImageRectOffset=Core.Icon('move')[2].ImageRectPosition, ImageRectSize=Core.Icon('move')[2].ImageRectSize, Size=UDim2.new(0,18,0,18), BackgroundTransparency=1, Position=UDim2.new(0.5,0,0.5,0), AnchorPoint=Vector2.new(0.5,0.5) })
             })
-            local openButtonDivider = New('Frame', { Size=UDim2.new(0,1,1,0), Position=UDim2.new(0,36,0.5,0), AnchorPoint=Vector2.new(0,0.5), BackgroundColor3=Color3.new(1,1,1), BackgroundTransparency=0.9 })
+            openButtonDivider = New('Frame', { Size=UDim2.new(0,1,1,0), Position=UDim2.new(0,36,0.5,0), AnchorPoint=Vector2.new(0,0.5), BackgroundColor3=Color3.new(1,1,1), BackgroundTransparency=0.9 })
             openButton = New('Frame', { Size=UDim2.new(0,0,0,0), Position=UDim2.new(0.5,0,0,28), AnchorPoint=Vector2.new(0.5,0.5), Parent=config.Parent, BackgroundTransparency=1, Active=true, Visible=false })
             openButtonFrame = New('TextButton', { Size=UDim2.new(0,0,0,44), AutomaticSize='X', Parent=openButton, Active=false, BackgroundTransparency=0.25, ZIndex=99, BackgroundColor3=Color3.new(0,0,0) }, {
                 New('UICorner', { CornerRadius=UDim.new(1,0) }),
@@ -3303,7 +3309,9 @@ function a.u()
             else Tween(resizeBar,0.2,{ImageTransparency=0.8}):Play() end
         end)
         
-        if not isMobile then local openButtonDragController = Core.Drag(openButton) end
+        if not isMobile and openButton then 
+            local openButtonDragController = Core.Drag(openButton)
+        end
         
         if window.Author then
             New('TextLabel', {
@@ -3325,7 +3333,7 @@ function a.u()
                 local icon = Core.Image(window.Icon, window.Title, window.UICorner-4, window.Folder, 'Window')
                 icon.Parent = window.UIElements.Main.Main.Topbar.Left
                 icon.Size = UDim2.new(0,22,0,22)
-                if Core.Icon(tostring(window.Icon))[1] and openButtonIcon then
+                if openButtonIcon and Core.Icon(tostring(window.Icon))[1] then
                     openButtonIcon.Image = Core.Icon(window.Icon)[1]
                     openButtonIcon.ImageRectOffset = Core.Icon(window.Icon)[2].ImageRectPosition
                     openButtonIcon.ImageRectSize = Core.Icon(window.Icon)[2].ImageRectSize
@@ -3365,7 +3373,7 @@ function a.u()
         local wasMinimized = false
         window:CreateTopbarButton('minus', function()
             window:Close()
-            task.spawn(function() task.wait(0.3) if not isMobile and window.IsOpenButtonEnabled then openButton.Visible = true end end)
+            task.spawn(function() task.wait(0.3) if not isMobile and window.IsOpenButtonEnabled and openButton then openButton.Visible = true end end)
             local message = isMobile and 'Press '..window.ToggleKey.Name..' to open the Window' or 'Click the Button to open the Window'
             if not window.IsOpenButtonEnabled then wasMinimized = true end
             if not wasMinimized then
@@ -3413,8 +3421,11 @@ function a.u()
             window.UIElements.MainBar.Background.ImageTransparency = transparent and 0.97 or 0.93
         end
         
-        if not isMobile and window.IsOpenButtonEnabled then
-            openButtonFrame.TextButton.MouseButton1Click:Connect(function() openButton.Visible = false window:Open() end)
+        if not isMobile and window.IsOpenButtonEnabled and openButtonFrame then
+            openButtonFrame.TextButton.MouseButton1Click:Connect(function() 
+                if openButton then openButton.Visible = false end
+                window:Open() 
+            end)
         end
         
         UserInputService.InputBegan:Connect(function(input, gameProcessed)
@@ -3449,7 +3460,7 @@ function a.u()
                 openButton.Visible = not config.OnlyMobile or not hasKeyboard
                 if not openButton.Visible then return end
                 if openButtonTitle then if config.Title then openButtonTitle.Text = config.Title end end
-                if Core.Icon(config.Icon) and openButtonIcon then
+                if openButtonIcon and Core.Icon(config.Icon) then
                     openButtonIcon.Visible = true
                     openButtonIcon.Image = Core.Icon(config.Icon)[1]
                     openButtonIcon.ImageRectOffset = Core.Icon(config.Icon)[2].ImageRectPosition
@@ -3607,21 +3618,8 @@ function a.u()
             end
         end)
         
-        local SearchSystem = a.load('t')
-        local isSearchOpen = false
-        local searchButton = window:CreateTopbarButton('search', function()
-            if isSearchOpen then return end
-            SearchSystem.new(window.TabModule, window.UIElements.Main, function()
-                isSearchOpen = false
-                window.CanResize = true
-                Tween(searchButton,0.1,{ImageTransparency=1}):Play()
-                searchButton.Active = false
-            end)
-            Tween(searchButton,0.1,{ImageTransparency=0.65}):Play()
-            searchButton.Active = true
-            isSearchOpen = true
-            window.CanResize = false
-        end, 996)
+        -- Nota: El sistema de búsqueda (módulo a.t) no está incluido en esta versión
+        -- ya que no estaba en los módulos que solicitaste
         
         return window
     end
@@ -3732,13 +3730,13 @@ function aa.GetTransparency()
 end
 
 function aa.GetWindowSize()
-    return Window and Window.UIElements.Main.Size or UDim2.new()
+    return aa.Window and aa.Window.UIElements.Main.Size or UDim2.new()
 end
 
 -- Popup
 function aa.Popup(config)
     config.WindUI = aa
-    return a.load('h').new(config)
+    return a.load('h')(config)
 end
 
 -- Crear ventana (FUNCIÓN PRINCIPAL)
