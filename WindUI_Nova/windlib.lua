@@ -3627,5 +3627,198 @@ function a.u()
     end
 end
 
--- Devolver el módulo principal
-return a
+-- ============================================
+-- PARTE FINAL: INICIALIZACIÓN Y MÓDULO PRINCIPAL
+-- ============================================
+
+local aa = {
+    Window = nil,
+    Theme = nil,
+    Creator = a.load('a'),
+    Themes = a.load('b'),
+    Transparent = false,
+    TransparencyValue = 0.15
+}
+
+local RunService = game:GetService('RunService')
+local KeySystem = a.load('f')
+local Themes = aa.Themes
+local Creator = aa.Creator
+
+-- Configurar temas
+Creator.Themes = Themes
+
+-- Obtener jugador local
+local LocalPlayer = game:GetService('Players') and game:GetService('Players').LocalPlayer or nil
+
+-- Configurar protección de GUI
+local protect_gui = protectgui or (syn and syn.protect_gui) or function() end
+local parentGui = gethui and gethui() or game.CoreGui
+
+-- Crear ScreenGuis principales
+aa.ScreenGui = Creator.New('ScreenGui', {
+    Name = 'WindUI',
+    Parent = parentGui,
+    IgnoreGuiInset = true,
+    ScreenInsets = 'None'
+}, {
+    Creator.New('Folder', { Name = 'Window' }),
+    Creator.New('Folder', { Name = 'Dropdowns' }),
+    Creator.New('Folder', { Name = 'KeySystem' }),
+    Creator.New('Folder', { Name = 'Popups' }),
+    Creator.New('Folder', { Name = 'ToolTips' })
+})
+
+aa.NotificationGui = Creator.New('ScreenGui', {
+    Name = 'WindUI-Notifications',
+    Parent = parentGui,
+    IgnoreGuiInset = true
+})
+
+protect_gui(aa.ScreenGui)
+protect_gui(aa.NotificationGui)
+
+-- Ajustar valor de transparencia
+math.clamp(aa.TransparencyValue, 0, 0.4)
+
+-- Sistema de notificaciones
+local NotificationSystem = a.load('g')
+local NotificationHolder = NotificationSystem.Init(aa.NotificationGui)
+
+function aa.Notify(config)
+    config.Holder = NotificationHolder.Frame
+    config.Window = aa.Window
+    config.WindUI = aa
+    return NotificationSystem.New(config)
+end
+
+function aa.SetNotificationLower(state)
+    NotificationHolder.SetLower(state)
+end
+
+-- Funciones de fuente y temas
+function aa.SetFont(newFont)
+    Creator.UpdateFont(newFont)
+end
+
+function aa.AddTheme(theme)
+    Themes[theme.Name] = theme
+    return theme
+end
+
+function aa.SetTheme(themeName)
+    if Themes[themeName] then
+        aa.Theme = Themes[themeName]
+        Creator.SetTheme(Themes[themeName])
+        Creator.UpdateTheme()
+        return Themes[themeName]
+    end
+    return nil
+end
+
+-- Establecer tema por defecto
+aa:SetTheme('Dark')
+
+function aa.GetThemes()
+    return Themes
+end
+
+function aa.GetCurrentTheme()
+    return aa.Theme.Name
+end
+
+function aa.GetTransparency()
+    return aa.Transparent or false
+end
+
+function aa.GetWindowSize()
+    return Window and Window.UIElements.Main.Size or UDim2.new()
+end
+
+-- Popup
+function aa.Popup(config)
+    config.WindUI = aa
+    return a.load('h').new(config)
+end
+
+-- Crear ventana (FUNCIÓN PRINCIPAL)
+function aa.CreateWindow(config)
+    local WindowCreator = a.load('u')
+    
+    -- Crear carpeta si no existe
+    if not isfolder('WindUI') then
+        makefolder('WindUI')
+    end
+    
+    if config.Folder then
+        makefolder(config.Folder)
+    else
+        makefolder(config.Title)
+    end
+    
+    config.WindUI = aa
+    config.Parent = aa.ScreenGui.Window
+    
+    -- Verificar que no exista otra ventana
+    if aa.Window then
+        warn('You cannot create more than one window')
+        return
+    end
+    
+    -- Sistema de keys (si está configurado)
+    local canProceed = true
+    local themeName = config.Theme or 'Dark'
+    local selectedTheme = Themes[themeName]
+    
+    aa.Theme = selectedTheme
+    Creator.SetTheme(selectedTheme)
+    
+    local playerName = LocalPlayer and LocalPlayer.Name or 'Unknown'
+    
+    if config.KeySystem then
+        canProceed = false
+        
+        if config.KeySystem.SaveKey and config.Folder then
+            local keyPath = config.Folder .. '/' .. playerName .. '.key'
+            if isfile(keyPath) then
+                local savedKey = readfile(keyPath)
+                local isValid = tostring(config.KeySystem.Key) == tostring(savedKey)
+                
+                if type(config.KeySystem.Key) == 'table' then
+                    isValid = table.find(config.KeySystem.Key, savedKey)
+                end
+                
+                if isValid then
+                    canProceed = true
+                else
+                    KeySystem.new(config, playerName, function(result)
+                        canProceed = result
+                    end)
+                end
+            else
+                KeySystem.new(config, playerName, function(result)
+                    canProceed = result
+                end)
+            end
+        else
+            KeySystem.new(config, playerName, function(result)
+                canProceed = result
+            end)
+        end
+        
+        -- Esperar a que el key system termine
+        repeat
+            task.wait()
+        until canProceed
+    end
+    
+    -- Crear la ventana
+    local newWindow = WindowCreator(config)
+    aa.Transparent = config.Transparent
+    aa.Window = newWindow
+    
+    return newWindow
+end
+
+-- Devolver el objeto principal
+return aa
