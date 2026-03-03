@@ -70,7 +70,7 @@ local Window = WindUI:CreateWindow({
     --Background = "rbxassetid://13511292247", -- rbxassetid only
     HasOutline = true,
     -- remove it below if you don't want to use the key system in your script.
-    KeySystem = { -- <- keysystem enabled
+    --[[KeySystem = { -- <- keysystem enabled
         Key = { "1234", "5678" },
         Note = "Example Key System. \n\nThe Key is '1234' or '5678",
         -- Thumbnail = {
@@ -79,7 +79,7 @@ local Window = WindUI:CreateWindow({
         -- },
         URL = "https://github.com/Footagesus/WindUI", -- remove this if the key is not obtained from the link.
         SaveKey = true, -- optional
-    },
+    },]]
 })
 
 
