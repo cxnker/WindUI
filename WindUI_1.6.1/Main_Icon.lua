@@ -2,7 +2,7 @@
 -- https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua
 
 local Icons = {
-    ["lucide"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua"))()
+    ["lucide"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/cxnker/WindUI/refs/heads/main/WindUI_1.6.1/lucide.lua"))()
     
     
     -- More soon 
