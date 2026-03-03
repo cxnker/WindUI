@@ -30,7 +30,7 @@ local Confirmed = false
 
 WindUI:Popup({
     Title = "Welcome! Popup Example",
-    -- Icon = "info",
+    Icon = "info",
     Content = "This is an Example UI for the " .. gradient("WindUI", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")) .. " Lib",
     Buttons = {
         {
@@ -55,7 +55,7 @@ repeat wait() until Confirmed
 
 local Window = WindUI:CreateWindow({
     Title = "WindUI Library",
-    -- Icon = "door-open",
+    Icon = "door-open",
     Author = "Example UI",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(580, 460),
@@ -88,7 +88,7 @@ local Window = WindUI:CreateWindow({
 
 Window:EditOpenButton({
     Title = "Open Example UI",
-    -- Icon = "monitor",
+    Icon = "monitor",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
     Color = ColorSequence.new( -- gradient
@@ -101,8 +101,8 @@ Window:EditOpenButton({
 
 
 local Tabs = {
-    ParagraphTab = Window:Tab({ Title = "Paragraph" }),
-    --[[ButtonTab = Window:Tab({ Title = "Button", Icon = "mouse-pointer-2", Desc = "Contains interactive buttons for various actions." }),
+    ParagraphTab = Window:Tab({ Title = "Paragraph", Icon = "type" }),
+    ButtonTab = Window:Tab({ Title = "Button", Icon = "mouse-pointer-2", Desc = "Contains interactive buttons for various actions." }),
     CodeTab = Window:Tab({ Title = "Code", Icon = "code", Desc = "Displays and manages code snippets." }),
     ColorPickerTab = Window:Tab({ Title = "ColorPicker", Icon = "paintbrush", Desc = "Choose and customize colors easily." }),
     DialogTab = Window:Tab({ Title = "Dialog", Icon = "message-square", Desc = "Dialog lol" }),
@@ -111,7 +111,7 @@ local Tabs = {
     SliderTab = Window:Tab({ Title = "Slider", Icon = "sliders-horizontal", Desc = "Adjust values smoothly with sliders." }),
     InputTab = Window:Tab({ Title = "Input", Icon = "keyboard", Desc = "Accept text and numerical input." }),
     KeybindTab = Window:Tab({ Title = "Keybind", Icon = "keyboard-off" }),
-    DropdownTab = Window:Tab({ Title = "Dropdown", Icon = "chevrons-up-down", Desc = "Select from multiple options." }),]]
+    DropdownTab = Window:Tab({ Title = "Dropdown", Icon = "chevrons-up-down", Desc = "Select from multiple options." }),
     divider1 = Window:Divider(),
     --
     WindowTab = Window:Tab({ 
