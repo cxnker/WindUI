@@ -27,7 +27,7 @@ local d=game:GetService"UserInputService"
 local e=game:GetService"TweenService"
 local f=game:GetService"LocalizationService"
 
-local g=loadstring(game:HttpGetAsync"https://raw.githubusercontent.com/Footagesus/Icons/main/Main.lua")()
+local g=loadstring(game:HttpGetAsync"https://raw.githubusercontent.com/cxnker/WindUI/refs/heads/main/WindUI_1.6.1/Main_Icon.lua")()
 g.SetIconsType"lucide"
 
 local h={
