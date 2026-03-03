@@ -1,8 +1,5 @@
-local WindUI = loadstring(game:HttpGet("raw_url_de_tu_archivo"))()
--- O si lo tienes local:
--- local WindUI = loadstring(readfile("WindUI_Deminfied.lua"))()
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/cxnker/WindUI/refs/heads/main/WindUI_Nova/windlib.lua"))()
 
--- Ahora puedes usar WindUI como siempre
 local Window = WindUI:CreateWindow({
     Title = "Mi Ventana",
     Author = "Yo",
