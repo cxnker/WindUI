@@ -61,14 +61,14 @@ local Window = WindUI:CreateWindow({
     Size = UDim2.fromOffset(580, 460),
     Transparent = true,
     Theme = "Dark",
-    User = {
+    --[[User = {
         Enabled = true, -- <- or false
         Callback = function() print("clicked") end, -- <- optional
         Anonymous = true -- <- or true
-    },
+    },]]
     SideBarWidth = 200,
     --Background = "rbxassetid://13511292247", -- rbxassetid only
-    HasOutline = true,
+    -- HasOutline = true,
     -- remove it below if you don't want to use the key system in your script.
     --[[KeySystem = { -- <- keysystem enabled
         Key = { "1234", "5678" },
@@ -106,7 +106,7 @@ local Tabs = {
     --
     WindowTab = Window:Tab({ 
         Title = "Window and File Configuration", 
-        Icon = "settings", 
+        -- Icon = "settings", 
         Desc = "Manage window settings and file configurations.", 
         ShowTabTitle = true
     }),
