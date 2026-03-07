@@ -188,7 +188,7 @@ TabHandles.Elements:Button({
         })
     end
 })
-
+--[[
 TabHandles.Elements:Colorpicker({
     Title = "Accent Color",
     Desc = "Change the UI accent color",
@@ -200,7 +200,7 @@ TabHandles.Elements:Colorpicker({
             Duration = 2
         })
     end
-})
+})]]
 
 TabHandles.Appearance:Paragraph({
     Title = "Customize Interface",
@@ -254,7 +254,7 @@ TabHandles.Appearance:Toggle({
         themeDropdown:Select(state and "Dark" or "Light")
     end
 })
-
+--[[
 TabHandles.Appearance:Button({
     Title = "Create New Theme",
     Icon = "plus",
@@ -270,7 +270,7 @@ TabHandles.Appearance:Button({
             }
         })
     end
-})
+})]]
 
 TabHandles.Config:Paragraph({
     Title = "Configuration Manager",
