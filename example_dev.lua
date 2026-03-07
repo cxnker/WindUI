@@ -1,5 +1,5 @@
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/cxnker/WindUI/main/windui_dev.lua"))()
-
+--[[
 WindUI:Localization({
     Enabled = true,
     Prefix = "loc:",
@@ -39,7 +39,7 @@ WindUI:Localization({
 })
 
 WindUI.TransparencyValue = 0.2
-WindUI:SetTheme("Dark")
+WindUI:SetTheme("Dark")]]
 
 local function gradient(text, startColor, endColor)
     local result = ""
@@ -104,7 +104,7 @@ Window:Tag({
     Title = "UI Library",
     --Color = Color3.fromHex("#30ff6a")
 })
-
+--[[
 Window:CreateTopbarButton("theme-switcher", "moon", function()
     WindUI:SetTheme(WindUI:GetCurrentTheme() == "Dark" and "Light" or "Dark")
     WindUI:Notify({
@@ -113,7 +113,7 @@ Window:CreateTopbarButton("theme-switcher", "moon", function()
         Duration = 2
     })
 end, 990)
-
+]]
 local Tabs = {
     Main = Window:Section({ Title = "loc:FEATURES", Opened = true }),
     Settings = Window:Section({ Title = "loc:SETTINGS", Opened = true }),
@@ -201,7 +201,7 @@ TabHandles.Elements:Colorpicker({
         })
     end
 })]]
-
+--[[
 TabHandles.Appearance:Paragraph({
     Title = "Customize Interface",
     Desc = "Personalize your experience",
@@ -254,7 +254,7 @@ TabHandles.Appearance:Toggle({
         themeDropdown:Select(state and "Dark" or "Light")
     end
 })
---[[
+
 TabHandles.Appearance:Button({
     Title = "Create New Theme",
     Icon = "plus",
@@ -270,7 +270,7 @@ TabHandles.Appearance:Button({
             }
         })
     end
-})]]
+})
 
 TabHandles.Config:Paragraph({
     Title = "Configuration Manager",
@@ -419,4 +419,4 @@ end)
 
 Window:OnDestroy(function()
     print("Window destroyed")
-end)
+end)]]
