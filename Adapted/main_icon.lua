@@ -3,7 +3,9 @@ local Icons = {
 }
 
 local IconModule = {
-    IconsType = "lucide"
+    IconsType = "lucide",
+    -- Añadimos un icono por defecto para cuando no se encuentre el solicitado
+    DefaultIcon = "rbxassetid://110786993356448" -- El icono "x" como fallback
 }
 
 function IconModule.SetIconsType(iconType)
@@ -11,12 +13,22 @@ function IconModule.SetIconsType(iconType)
 end
 
 function IconModule.Icon(Icon, Type)
-    local iconType = Icons[Type or IconModule.IconsType]
+    local iconSet = Icons[Type or IconModule.IconsType]
     
-    if iconType[Icon] then
-        return { assetId, {} }
+    if not iconSet then
+        warn(`[IconModule] Conjunto de iconos "{Type or IconModule.IconsType}" no encontrado. Usando icono por defecto.`)
+        return { IconModule.DefaultIcon, {} }
     end
-    return nil
+
+    local assetId = iconSet[Icon]
+    
+    if assetId then
+        return { assetId, {} }
+    else
+        -- Icono no encontrado - devolvemos el icono por defecto en lugar de nil
+        warn(`[IconModule] Icono "{Icon}" no encontrado. Usando icono por defecto.`)
+        return { IconModule.DefaultIcon, {} }
+    end
 end
 
 return IconModule
