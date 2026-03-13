@@ -476,6 +476,69 @@ end
 return t
 end
 
+function h.Image(k,l,o,p,q,r,s)
+local function SanitizeFilename(t)
+t=t:gsub("[%s/\\:*?\"<>|]+","-")
+t=t:gsub("[^%w%-_%.]","")
+return t
+end
+
+p=p or"Temp"
+l=SanitizeFilename(l)
+
+local t=i("Frame", {
+Size=UDim2.new(0,0,0,0),
+BackgroundTransparency=1,
+},{
+i("ImageLabel",{
+Size=UDim2.new(1,0,1,0),
+BackgroundTransparency=1,
+ScaleType="Crop",
+ThemeTag=(h.Icon(k)or s)and{
+ImageColor3=r and"Icon"
+}or nil,
+},{
+i("UICorner",{
+CornerRadius=UDim.new(0,o)
+})
+})
+})
+
+    local iconData = h.Icon(k)
+    if iconData then
+        t.ImageLabel.Image = iconData[1]
+        
+        if iconData[2] and iconData[2].ImageRectPosition and iconData[2].ImageRectSize then
+            t.ImageLabel.ImageRectOffset = iconData[2].ImageRectPosition
+            t.ImageLabel.ImageRectSize = iconData[2].ImageRectSize
+        end
+    end
+
+if string.find(k,"http")then
+local u="WindUI/"..p.."/Assets/."..q.."-"..l..".png"
+local v,w=pcall(function()
+task.spawn(function()
+if not isfile(u)then
+local v=h.Request{
+Url=k,
+Method="GET",
+}.Body
+writefile(u,v)
+end
+t.ImageLabel.Image=getcustomasset(u)
+end)
+end)
+if not v then
+warn("[ WindUI.Creator ]  '"..identifyexecutor().."' doesnt support the URL Images. Error: "..w)
+t:Destroy()
+end
+elseif string.find(k,"rbxassetid")then
+t.ImageLabel.Image=k
+end
+
+return t
+end
+
 return h end function a.b()
 local b={}
 
