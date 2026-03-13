@@ -416,64 +416,88 @@ end
 return u
 end
 
-function h.Image(k,l,o,p,q,r,s)
-local function SanitizeFilename(t)
-t=t:gsub("[%s/\\:*?\"<>|]+","-")
-t=t:gsub("[^%w%-_%.]","")
-return t
-end
+function h.Image(k, l, o, p, q, r, s)
+    -- Si k es nil o vacío, no intentamos crear la imagen
+    if not k or k == "" then
+        -- Devolvemos un frame vacío en lugar de nil para no romper la UI
+        return i("Frame", {
+            Size = UDim2.new(0, 0, 0, 0),
+            BackgroundTransparency = 1,
+        })
+    end
+    
+    local function SanitizeFilename(t)
+        t = t:gsub("[%s/\\:*?\"<>|]+", "-")
+        t = t:gsub("[^%w%-_%.]", "")
+        return t
+    end
 
-p=p or"Temp"
-l=SanitizeFilename(l)
+    p = p or "Temp"
+    l = SanitizeFilename(l)
 
-local t=i("Frame",{
-Size=UDim2.new(0,0,0,0),
+    local t = i("Frame", {
+        Size = UDim2.new(0, 0, 0, 0),
+        BackgroundTransparency = 1,
+    }, {
+        i("ImageLabel", {
+            Size = UDim2.new(1, 0, 1, 0),
+            BackgroundTransparency = 1,
+            ScaleType = "Crop",
+            ThemeTag = (h.Icon(k) or s) and {
+                ImageColor3 = r and "Icon"
+            } or nil,
+        }, {
+            i("UICorner", {
+                CornerRadius = UDim.new(0, o)
+            })
+        })
+    })
 
-BackgroundTransparency=1,
-},{
-i("ImageLabel",{
-Size=UDim2.new(1,0,1,0),
-BackgroundTransparency=1,
-ScaleType="Crop",
-ThemeTag=(h.Icon(k)or s)and{
-ImageColor3=r and"Icon"
-}or nil,
-},{
-i("UICorner",{
-CornerRadius=UDim.new(0,o)
-})
-})
-})
-if h.Icon(k)then
-t.ImageLabel.Image=h.Icon(k)[1]
-t.ImageLabel.ImageRectOffset=h.Icon(k)[2].ImageRectPosition
-t.ImageLabel.ImageRectSize=h.Icon(k)[2].ImageRectSize
-end
-if string.find(k,"http")then
-local u="WindUI/"..p.."/Assets/."..q.."-"..l..".png"
-local v,w=pcall(function()
-task.spawn(function()
-if not isfile(u)then
-local v=h.Request{
-Url=k,
-Method="GET",
-}.Body
+    -- Intentamos obtener el icono
+    local success, iconData = pcall(function()
+        return h.Icon(k)
+    end)
+    
+    if success and iconData and iconData[1] then
+        -- Tenemos un icono válido
+        t.ImageLabel.Image = iconData[1]
+        
+        -- Compatibilidad con formato antiguo (spritesheets)
+        if iconData[2] and iconData[2].ImageRectPosition and iconData[2].ImageRectSize then
+            t.ImageLabel.ImageRectOffset = iconData[2].ImageRectPosition
+            t.ImageLabel.ImageRectSize = iconData[2].ImageRectSize
+        end
+    else
+        -- No se pudo obtener el icono, usamos un placeholder transparente
+        t.ImageLabel.Image = "rbxassetid://0" -- Asset invisible
+        t.ImageLabel.BackgroundTransparency = 1
+        t.ImageLabel.Visible = false -- Opcional: ocultamos el ImageLabel
+    end
 
-writefile(u,v)
-end
-t.ImageLabel.Image=getcustomasset(u)
-end)
-end)
-if not v then
-warn("[ WindUI.Creator ]  '"..identifyexecutor().."' doesnt support the URL Images. Error: "..w)
+    -- Manejo de URLs y assets locales (igual que antes)
+    if string.find(k, "http") then
+        local u = "WindUI/" .. p .. "/Assets/." .. q .. "-" .. l .. ".png"
+        local v, w = pcall(function()
+            task.spawn(function()
+                if not isfile(u) then
+                    local v = h.Request {
+                        Url = k,
+                        Method = "GET",
+                    }.Body
+                    writefile(u, v)
+                end
+                t.ImageLabel.Image = getcustomasset(u)
+            end)
+        end)
+        if not v then
+            warn("[ WindUI.Creator ]  '" .. identifyexecutor() .. "' doesnt support the URL Images. Error: " .. w)
+            t:Destroy()
+        end
+    elseif string.find(k, "rbxassetid") then
+        t.ImageLabel.Image = k
+    end
 
-t:Destroy()
-end
-elseif string.find(k,"rbxassetid")then
-t.ImageLabel.Image=k
-end
-
-return t
+    return t
 end
 
 function h.Image(k,l,o,p,q,r,s)
