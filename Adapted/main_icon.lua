@@ -1,7 +1,6 @@
 local Icons = {
-    ["lucide"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/cxnker/WindUI/refs/heads/main/WindUI_1.6.1/lucide.lua"))()
+    ["lucide"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/cxnker/WindUI/refs/heads/main/Adapted/lucide.lua"))()
 }
-
 
 local IconModule = {
     IconsType = "lucide"
